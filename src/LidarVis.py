@@ -23,12 +23,14 @@ def calc_end_pos(start_pos, distance, num):
     return end_pos
 
 class Visualiser:
+    CAR_WIDTH, CAR_HEIGHT = 14, 20
     def __init__(self, swidth=600, sheight=600):
         pygame.init()
         self.clock = pygame.time.Clock()
         WINDOW_SIZE = (swidth, sheight)
         self.dis = pygame.display.set_mode(WINDOW_SIZE)
         pygame.display.set_caption('Lidar Visualisation')
+        self.START_POS = (self.dis.get_width() / 2, (self.dis.get_height() / 2) - (self.CAR_HEIGHT /2)+150)
 
     def display(self, proc_ranges):
         pygame.init()
@@ -54,3 +56,19 @@ class Visualiser:
                 pygame.draw.circle(self.dis, (100, 100, 100), start_pos, 30, 2)
                 pygame.draw.circle(self.dis, (150, 150, 150), start_pos, 50, 2)
                 pygame.display.update()
+
+    def step(self, proc_ranges):
+        self.dis.fill((0, 0, 0))
+        for num, distance in enumerate(proc_ranges):
+            end_pos = calc_end_pos(self.START_POS, distance, num)
+            if num < 135 or num > 945:
+                pygame.draw.line(self.dis, (155, 155, 155), self.START_POS, end_pos, 1)
+            else:
+                pygame.draw.line(self.dis, (255, 255, 255), self.START_POS, end_pos, 1)
+        if len(proc_ranges) > 0:
+            #pygame.draw.line(self.dis, (0, 0, 255), start_pos, calc_end_pos(start_pos, best_speed, 135 + best_point), 5)
+            pygame.draw.rect(self.dis, (255, 0, 0), pygame.Rect((self.dis.get_width() / 2) - (self.CAR_WIDTH / 2), \
+                (self.dis.get_height() / 2) - (self.CAR_HEIGHT / 2) + 150, self.CAR_WIDTH, self.CAR_HEIGHT))
+            pygame.draw.circle(self.dis, (100, 100, 100), self.START_POS, 30, 2)
+            pygame.draw.circle(self.dis, (150, 150, 150), self.START_POS, 50, 2)
+            pygame.display.update()
