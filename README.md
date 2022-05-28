@@ -149,6 +149,15 @@ gym 0.17.3 requires pyglet<=1.5.0,>=1.4.0, but you'll have pyglet 1.5.11 which i
 ```
 which could be ignored. The environment should still work without error.
 
+If you get an error like
+```
+Can't make f110_gym:f1tenth_something
+```
+go to the main repo and use this command in the terminal
+```
+pip install --user -force--reinstall -e  gym
+```
+
 ## Citing
 If you find this Gym environment useful, please consider citing:
 
