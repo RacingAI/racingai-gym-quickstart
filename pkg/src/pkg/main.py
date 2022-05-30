@@ -4,6 +4,8 @@ import numpy as np
 import concurrent.futures
 import os
 import sys
+from utils.tools import check_race_conditions
+from utils.LidarVis import *
 
 # Get ./src/ folder & add it to path
 current_dir = os.path.abspath(os.path.dirname(__file__))
@@ -17,7 +19,7 @@ from drivers import DisparityExtender
 drivers = [DisparityExtender()]
 
 # choose your racetrack here (Oschersleben, SOCHI, SOCHI_OBS)
-RACETRACK = 'Oschersleben'
+RACETRACK = 'TRACK_CUSTOM'
 
 
 def _pack_odom(obs, i):
@@ -46,10 +48,13 @@ class GymRunner(object):
 
         # specify starting positions of each agent
         driver_count = len(drivers)
+        visualise_lidar = True
         if driver_count == 1:
             if 'SOCHI'.lower() in RACETRACK.lower():
                 poses = np.array([[0.8007017, -0.2753365, 4.1421595]])
             elif 'Oschersleben'.lower() in RACETRACK.lower():
+                poses = np.array([[0.0702245, 0.3002981, 2.79787]])
+            elif 'TRACK_CUSTOM'.lower() in RACETRACK.lower():
                 poses = np.array([[0.0702245, 0.3002981, 2.79787]])
             else:
                 raise ValueError("Initial position is unknown for map '{}'.".format(RACETRACK))
@@ -71,6 +76,9 @@ class GymRunner(object):
 
         obs, step_reward, done, info = env.reset(poses=poses)
         env.render()
+        if visualise_lidar:
+            vis = Visualiser()
+            vis_driver_idx = 0
 
         laptime = 0.0
         start = time.time()
@@ -99,6 +107,10 @@ class GymRunner(object):
                 actions.append([steer, speed])
             actions = np.array(actions)
             obs, step_reward, done, info = env.step(actions)
+            if visualise_lidar and vis_driver_idx >= 0 and vis_driver_idx < len(drivers):
+                proc_ranges = obs['scans'][vis_driver_idx]
+                vis.step(proc_ranges)
+            done = check_race_conditions(obs)
             laptime += step_reward
             env.render(mode='human')
 
