@@ -1,3 +1,5 @@
+Forked from [Riders F1tenth Sim](https://gitlab.com/acrome-colab/riders-poc/f1tenth-riders-quickstart)
+
 # The F1TENTH - Riders
 
 This is a sample project for [F1Tenth](https://f1tenth.org) challenges, the most recent being [F1Tenth ICRA 2022](https://riders.ai/challenge/67/f1-tenth-icra-2022/aboutCompetition). 
