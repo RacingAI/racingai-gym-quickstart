@@ -4,3 +4,4 @@ origin: [-156.68159080844768,-121.23484964729177, 0.000000]
 negate: 0
 occupied_thresh: 0.45
 free_thresh: 0.196
+default_resolution: 0.08534
