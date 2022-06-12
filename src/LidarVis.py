@@ -30,6 +30,8 @@ class Visualiser:
         WINDOW_SIZE = (swidth, sheight)
         self.dis = pygame.display.set_mode(WINDOW_SIZE)
         pygame.display.set_caption('Lidar Visualisation')
+        logo = pygame.image.load('maps/TRACK_1.png')
+        pygame.display.set_icon(logo)
         self.START_POS = (self.dis.get_width() / 2, (self.dis.get_height() / 2) - (self.CAR_HEIGHT /2)+150)
 
     def display(self, proc_ranges):

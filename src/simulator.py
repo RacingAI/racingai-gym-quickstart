@@ -6,8 +6,8 @@ from argparse import Namespace
 import concurrent.futures
 
 # import your drivers here
-from follow_the_gap import GapFollower
-from starting_point import SimpleDriver
+from drivers.follow_the_gap import GapFollower
+from drivers.starting_point import SimpleDriver
 from drivers.ctq import CTQmk4
 
 #Visualisation
@@ -15,7 +15,7 @@ import pygame,sys
 from LidarVis import *
 
 # choose your drivers here (1-4)
-drivers = [GapFollower()]
+drivers = [GapFollower(), GapFollower()]
 
 # choose your racetrack here (TRACK_1, TRACK_2, TRACK_3, OBSTACLES)
 RACETRACK = 'TRACK_1'
