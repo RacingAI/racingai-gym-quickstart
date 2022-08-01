@@ -18,7 +18,7 @@ This is a fork of the [F1TENTH Gym Repository](https://github.com/f1tenth/f1tent
 Clone this repository. If you don't want to use git, you may alternatively download this repository as a zip file by clicking the green "Code" button and then selecting "Download ZIP" (you will then have to extract and rename the folder).
 
 ```bash
-$ git clone https://github.com/lilpharaoh1/racingai-gym-quickstart
+$ git clone https://github.com/RacingAI/racingai-gym-quickstart
 ```
 
 Go into the repository and install the required packages. If you don't want to use the command line to navigate to the repository, you may open the folder in Visual Studio Code or another code editor of your choice. Note: [pip](https://pypi.org/project/pip/) is a package manager for Python packages.
