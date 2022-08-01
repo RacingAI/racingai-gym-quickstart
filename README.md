@@ -27,6 +27,8 @@ Go into the repository and install the required packages. If you don't want to u
 $ cd racingai-gym-quickstart
 $ pip install gym==0.24.1
 $ pip install pygame
+$ cd gym 
+$ python setup.py install
 ```
 
 Then to make sure it's working, go into the src directory and run the simulator
