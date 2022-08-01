@@ -27,6 +27,9 @@ Go into the repository and install the required packages. If you don't want to u
 $ cd racingai-gym-quickstart
 $ pip install gym==0.24.1
 $ pip install pygame
+```
+Now install the f110 gym enviornment using the setup script in the gym directory
+```bash
 $ cd gym 
 $ python setup.py install
 ```
@@ -34,7 +37,7 @@ $ python setup.py install
 Then to make sure it's working, go into the src directory and run the simulator
 
 ```bash
-$ cd src
+$ cd ../src
 $ python simulator.py
 ```
 
