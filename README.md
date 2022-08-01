@@ -25,7 +25,7 @@ Go into the repository and install the required packages. If you don't want to u
 
 ```bash
 $ cd racingai-gym-quickstart
-$ pip install --user -e gym==0.24.1
+$ pip install gym==0.24.1
 $ pip install pygame
 ```
 
