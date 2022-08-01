@@ -15,17 +15,18 @@ This is a fork of the [F1TENTH Gym Repository](https://github.com/f1tenth/f1tent
 
 ## Quickstart
 
-Clone this repository. If you don't want to use git, you may alternatively [download](https://github.com/davidnugent2425/f1tenth_gym/archive/main.zip) this repository as a zip file (you will then have to extract and rename the folder).
+Clone this repository. If you don't want to use git, you may alternatively download this repository as a zip file by clicking the green "Code" button and then selecting "Download ZIP" (you will then have to extract and rename the folder).
 
 ```bash
-$ git clone https://github.com/FT-Autonomous/f1tenth-gym-quickstart.git
+$ git clone https://github.com/RacingAI/racingai-gym-quickstart
 ```
 
 Go into the repository and install the required packages. If you don't want to use the command line to navigate to the repository, you may open the folder in Visual Studio Code or another code editor of your choice. Note: [pip](https://pypi.org/project/pip/) is a package manager for Python packages.
 
-```
-$ cd f1tenth_gym
-$ pip install --user -e gym/
+```bash
+$ cd racingai-gym-quickstart
+$ pip install --user -e gym==0.24.1
+$ pip install pygame
 ```
 
 Then to make sure it's working, go into the src directory and run the simulator
