@@ -163,6 +163,9 @@ go to the main repo and use this command in the terminal
 ```
 pip install --user -force--reinstall -e  gym
 ```
+* `simulator.py` cannot be run directly inside of Visual Studio Code without first changing two lines of code
+  1. Line 29: Change `open('maps/{}.yaml'.format(RACETRACK))` to `open('src/maps/{}.yaml'.format(RACETRACK))`
+  1. Line 33: Change `gym.make('f110_gym:f110-v0', map="maps/{}".format(RACETRACK)` to `gym.make('f110_gym:f110-v0', map="src/maps/{}".format(RACETRACK)`
 
 ## Citing
 If you find this Gym environment useful, please consider citing:
