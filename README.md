@@ -164,6 +164,24 @@ go to the main repo and use this command in the terminal
 pip install --user -force--reinstall -e  gym
 ```
 
+If you get an error like
+```
+Import Error: Numba needs NumPy 1.22 or less
+```
+go to the main repo and use this command in the terminal
+```
+pip install numba==0.55
+```
+
+If you get an error like
+```
+ModuleNotFound: No module named pyglet
+```
+go to the main repo and use this command in the terminal
+```
+pip install pyglet
+```
+
 ## Citing
 If you find this Gym environment useful, please consider citing:
 
