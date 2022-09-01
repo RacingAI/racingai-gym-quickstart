@@ -10,13 +10,14 @@ from drivers.follow_the_gap import GapFollower
 from drivers.starting_point import SimpleDriver
 from drivers.ctq import CTQmk4
 from drivers.disparity import DisparityExtender
+from drivers.PID import PIDControl
 
 #Visualisation
 import pygame,sys
 from LidarVis import *
 
 # choose your drivers here (1-4)
-drivers = [DisparityExtender()]
+drivers = [PIDControl()]
 
 # choose your racetrack here (TRACK_1, TRACK_2, TRACK_3, OBSTACLES)
 RACETRACK = 'TRACK_1'
