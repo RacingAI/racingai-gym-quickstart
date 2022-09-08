@@ -3,104 +3,89 @@ import time
 
 class PIDControl:
 
-    SPEED = 3.0
-
     def __init__(self):
         """Initialises class variables
         """
         self.radians_per_elem = None
-        self.centre_elem = None
+
+        # angle between the two lidar ranges we are measuring
+        self.theta = np.pi / 3 # 60 deg
+
+        # angle of the car relative to the centre line
+        self.alpha = 0
+
+        # distance we want the car to be from the wall
+        self.wall_dist = 1.75
+
+        # a correction factor for the time, since we initialise the class before the actual simulation starts
         self.prev_time = time.time() + 1.7
         self.prev_error = 0
         self.total_error = 0
-        self.side = None
 
-
-    def preprocess_lidar(self, ranges):
-        """ Preprocess the LiDAR scan array by removing the LiDAR scan data from
-        directly in front of and behind the car. Returns two arrays: the LiDAR scans to the left 
-        and to the right of the car
-        """
-        self.radians_per_elem = (2*np.pi) / len(ranges)
-        eighth = int(len(ranges) / 8)
-        # LiDAR scan data in the right quadrant
-        right_ranges = np.array(ranges[eighth: (3*eighth)])
-        # LiDAR scan data in the left quadrant
-        left_ranges = np.array(ranges[-(3 * eighth): -eighth])
-        return left_ranges, right_ranges
-
-
-    def find_max_gap(self, l_ranges, r_ranges):
-        """Finds the width of the racetrack given the left and right distances.
-        Returns the gap width and the distance to the closest wall
-        """
-        min_l_dist, min_l_elem = self.find_min_distance(l_ranges)
-        min_r_dist, min_r_elem = self.find_min_distance(r_ranges)
-        if (min_l_dist < min_r_dist):
-            gap_width = min_l_dist + r_ranges[min_l_elem]
-            self.side = "L"
-            return gap_width, min_l_dist
-            #print("Left = {}, right = {}".format(min_l_dist, r_ranges[min_r_elem]))
-        else:
-            gap_width = min_r_dist + l_ranges[min_r_elem]
-            self.side = "R"
-            return gap_width, min_r_dist
-            #print("Left = {}, right = {}".format(l_ranges[min_r_elem], min_l_dist))
+    def find_ranges(self, ranges):
+        """Finds two LiDAR distances, a and b
+        b is the LiDAR distance perpendicular to the car's axis
+        a is the LiDAR distance which is at an angle theta relative to b"""
         
+        # we want the distance directly to the right of the car (relative to the front of the car)
+        quarter = int(len(ranges) / 4)
+        b = ranges[quarter]
 
-    def find_min_distance(self, ranges):
-        """Finds the closest LiDAR distance and returns both the distance and the index of that
-        distance in the array of LiDAR distances
+        index_a = quarter + int(self.theta / self.radians_per_elem)
+        a = ranges[index_a]
+
+       # print ("a = {}, b = {}".format(a, b))
+
+        return a, b
+
+    def find_alpha(self, a, b):
+        """ Finds the angle alpha, which is the angle at which the car is to the centre of the track
         """
-        min_dist = ranges[0]
-        min_elem_num = 0
-        for i, dist in enumerate(ranges):
-            if dist > 0:
-                if dist < min_dist:
-                    min_dist = dist
-                    min_elem_num = i
+        p = (a * np.cos(self.theta)) - b
+        q = a * np.sin(self.theta)
 
-        return min_dist, min_elem_num
+        self.alpha = np.arctan(p / q)
 
+        return
 
-    def find_angle(self, ranges):
-        """ Find the angle of the car relative to the centre line of the track
-        """
-        if self.side == "L":
-            min_dist, min_elem = self.find_min_distance(ranges)
-            centre = int(len(ranges) / 2)
-            return (centre - min_elem) * self.radians_per_elem
-        else:
-            min_dist, min_elem = self.find_min_distance(ranges)
-            centre = int(len(ranges) / 2)
-            return (min_elem - centre) * self.radians_per_elem
-        
-
-    def PID(self, l_ranges, r_ranges):
-        """ Return the steering angle given the LiDAR distances to the left and right of the car
+    def find_future_distance(self, ranges):
+        """ Finds the predicted distance that the car will be from the wall after
+        travelling a distance L
         """
 
+        # the distance we want to "look ahead"
+        L = 1
+
+        a, b = self.find_ranges(ranges)
+
+        self.find_alpha(a, b)
+
+        # current distance from the wall
+        Dt = b * np.cos(self.alpha)
+
+        future_dist = Dt + (L * np.sin(self.alpha))
+
+        return future_dist
+
+    def PID(self, ranges):
+        """ Calculates the steering angle using a Proportional Integral Derivative (PID) controller
+        """
         # PID constants
-        Kp = 0.2 
-        Ki = 0.00012
-        Kd = 0.0002
+        Kp = 0.3
+        Ki = 0 #0.00012
+        Kd = 0.01
 
-        gap_width, min_dist = self.find_max_gap(l_ranges, r_ranges)
-
-        gap_centre = gap_width / 2
         time_elapsed = time.time() - self.prev_time
         self.prev_time = time.time()
 
-        if self.side == "L": 
-            y = min_dist - gap_centre
-            theta = self.find_angle(l_ranges)   
-        elif self.side == "R":
-            y = gap_centre - min_dist
-            theta = self.find_angle(r_ranges)  
+        actual_wall_dist = self.find_future_distance(ranges)
 
+        error = self.wall_dist - actual_wall_dist
 
-        error = y + ((self.SPEED * time_elapsed) * np.sin(theta))
+        # our "integral"
         self.total_error += error
+
+        # our "derivative"
         derror_dt = (error - self.prev_error) / time_elapsed
 
         steering_angle = (Kp * error) + (Kd* derror_dt) + (Ki * self.total_error)
@@ -108,12 +93,24 @@ class PIDControl:
 
         return steering_angle
 
-    
-    def process_lidar(self, ranges):
-        """ Process each LiDAR scan as per the PID Wall Follow algorithm & publish an AckermannDriveStamped Message
+    def calc_speed(self):
+        """Calculate the speed at which the car should travel based on the angle 
+        at which it is to the centre of the track
         """
-        left_ranges, right_ranges = self.preprocess_lidar(ranges)
-        
-        steering_angle = self.PID(left_ranges, right_ranges)
-       
-        return self.SPEED, steering_angle
+        if 0 <= self.alpha and self.alpha < 0.1745329: # between 0 and 10 deg
+            speed = 7
+        elif  0.1745329 <= self.alpha and self.alpha < 0.3490659: # between 10 and 20 deg
+            speed = 5
+        else:
+            speed = 3
+
+        return speed
+
+    def process_lidar(self, ranges):
+        """ Process each LiDAR scan as per the PID Wall Follower algorithm & publish an AckermannDriveStamped Message
+        """
+        self.radians_per_elem = (2*np.pi) / len(ranges)
+        steering_angle = self.PID(ranges)
+        speed = self.calc_speed()
+
+        return speed, steering_angle
