@@ -8,7 +8,6 @@ import concurrent.futures
 # import your drivers here
 from drivers.follow_the_gap import GapFollower
 from drivers.starting_point import SimpleDriver
-from drivers.ctq import CTQmk4
 from drivers.disparity import DisparityExtender
 
 #Visualisation
