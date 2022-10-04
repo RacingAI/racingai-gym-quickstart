@@ -38,10 +38,10 @@ class DisparityExtender:
                 disparities.append(index)
         return disparities
 
-    def get_num_points_to_cover(self, dist, width):
+    def get_num_points_to_cover(self, dist, width, close_distance_idx):
         """ Returns the number of LiDAR points that correspond to a width at
             a given distance.
-            We calculate the angle that would span the width at this distance,
+            We calculate the angle that would create an arc of length "width" at this distance,
             then convert this angle to the number of LiDAR points that
             span this angle.
             Current math for angle:
@@ -52,8 +52,10 @@ class DisparityExtender:
                 point.
             Possible Improvements: use a different method to calculate the angle
         """
-        angle = 2 * np.arcsin(width / (2 * dist))
-        num_points = int(np.ceil(angle / self.radians_per_point))
+
+
+        angle = width/dist
+        num_points = int(np.ceil((angle / self.radians_per_point)))
         return num_points
 
     def cover_points(self, num_points, start_idx, cover_right, ranges):
@@ -96,7 +98,7 @@ class DisparityExtender:
             far_idx = first_idx + np.argmax(points)
             close_dist = ranges[close_idx]
             num_points_to_cover = self.get_num_points_to_cover(close_dist,
-                                                               width_to_cover)
+                                                               width_to_cover, close_idx)
             cover_right = close_idx < far_idx
             ranges = self.cover_points(num_points_to_cover, close_idx,
                                        cover_right, ranges)

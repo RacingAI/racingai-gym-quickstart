@@ -8,7 +8,6 @@ may help you see what your algorithm is doing
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 class DisparityExtender:
@@ -43,7 +42,7 @@ class DisparityExtender:
         """
         Given the distance of the closest LiDAR scan, you need to
         figure out how many lidar points you need to cover half the
-        width of the car
+        width of the car as described in the workshop
         """
     
     def cover_points(self, num_points, start_idx, cover_right, ranges):
