@@ -30,7 +30,7 @@ pip install -r requirements.txt
 Then to make sure it's working, go into the src directory and run the simulator
 
 ```bash
-$ cd ../src
+$ cd src
 $ python simulator.py
 ```
 
