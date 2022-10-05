@@ -38,7 +38,7 @@ class DisparityExtender:
         Find the indices where the disparities are. Return as an array.
         """
     
-    def get_num_points_to_cover(self, distance, width, close_distance_idx):
+    def get_num_points_to_cover(self, distance, width):
         """
         Given the distance of the closest LiDAR scan, you need to
         figure out how many lidar points you need to cover half the
