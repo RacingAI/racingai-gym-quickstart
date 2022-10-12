@@ -1,5 +1,6 @@
 numpy
 gym==0.24.1
+pyyaml
 pygame
 pyglet==1.5.11
 numba==0.55
