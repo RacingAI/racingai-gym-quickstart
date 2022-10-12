@@ -24,20 +24,13 @@ $ git clone https://github.com/RacingAI/racingai-gym-quickstart
 Go into the repository and install the required packages. If you don't want to use the command line to navigate to the repository, you may open the folder in Visual Studio Code or another code editor of your choice. Note: [pip](https://pypi.org/project/pip/) is a package manager for Python packages.
 
 ```bash
-$ cd racingai-gym-quickstart
-$ pip install gym==0.24.1
-$ pip install pygame
-```
-Now install the f110 gym enviornment using the setup script in the gym directory
-```bash
-$ cd gym 
-$ python setup.py install
+pip install -r requirements.txt
 ```
 
 Then to make sure it's working, go into the src directory and run the simulator
 
 ```bash
-$ cd ../src
+$ cd src
 $ python simulator.py
 ```
 
