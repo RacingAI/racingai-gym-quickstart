@@ -27,6 +27,12 @@ Go into the repository and install the required packages. If you don't want to u
 pip install -r requirements.txt
 ```
 
+Once this is done we run the setup.py file
+
+```bash
+python gym/setup.py
+```
+
 Then to make sure it's working, go into the src directory and run the simulator
 
 ```bash
