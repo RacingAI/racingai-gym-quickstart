@@ -6,12 +6,13 @@ from os import getenv
 import subprocess
 import importlib
 import sys
+import tempfile
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", action="append", dest="repos", default=[])
     parser.add_argument("--pull-location",
-                        default=getenv("RACINGAI_PULL_LOCATION", "/tmp/racingai"))
+                        default=getenv("RACINGAI_PULL_LOCATION", os.path.join(tempfile.gettempdir(), 'racing-ai')))
     args = parser.parse_args()
     assert len(args.repos) > 0, "Must provide at least one github repository"
     # Clone repositories
