@@ -203,18 +203,13 @@ def check_ttc_jit(scan, vel, scan_angles, cosines, side_distances, ttc_thresh):
         collision_angle (float): at which angle the collision happened
     """
     if vel != 0.0:
-        in_collision = False
         num_beams = scan.shape[0]
         for i in range(num_beams):
             proj_vel = vel*cosines[i]
             ttc = (scan[i] - side_distances[i])/proj_vel
             if (ttc < ttc_thresh) and (ttc >= 0.0):
-                in_collision = True
-                break
-    else:
-        in_collision = False
-
-    return in_collision
+                return True
+    return False
 
 @njit(cache=True)
 def cross(v1, v2):
