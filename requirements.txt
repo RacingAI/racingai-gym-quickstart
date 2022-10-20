@@ -1,4 +1,4 @@
-numpy
+numpy==1.22
 gym==0.24.1
 pygame
 pyglet==1.5.11
