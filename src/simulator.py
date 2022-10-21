@@ -12,25 +12,22 @@ from drivers.ctq import CTQmk4
 from drivers.disparity import DisparityExtender
 
 #Visualisation
-import pygame,sys
-from LidarVis import *
+from LidarVis import Visualiser, calc_end_pos
 
-# choose your drivers here (1-4)
-drivers = [DisparityExtender()]
-
-# choose your racetrack here (TRACK_1, TRACK_2, TRACK_3, OBSTACLES)
-RACETRACK = 'TRACK_1'
-
-# visualiser
-visualise_lidar = True
-vis_driver_idx = 0 # Which driver do you want to visualise
-
-if __name__ == '__main__':
-    with open('maps/{}.yaml'.format(RACETRACK)) as map_conf_file:
+def race(drivers=[DisparityExtender()],
+         racetrack='TRACK_1',
+         vis_driver_idx=0,
+         visualise_lidar=True):
+    """
+    :param racetrack: (TRACK_1, TRACK_2, TRACK_3, OBSTACLES)
+    :param drivers: A list of classes with a process_lidar
+    function.
+    """
+    with open('maps/{}.yaml'.format(racetrack)) as map_conf_file:
         map_conf = yaml.load(map_conf_file, Loader=yaml.FullLoader)
     scale = map_conf['resolution'] / map_conf['default_resolution']
     starting_angle = map_conf['starting_angle']
-    env = gym.make('f110_gym:f110-v0', map="maps/{}".format(RACETRACK),
+    env = gym.make('f110_gym:f110-v0', map="maps/{}".format(racetrack),
             map_ext=".png", num_agents=len(drivers), disable_env_checker = True)
     # specify starting positions of each agent
     poses = np.array([[-1.25*scale + (i * 0.75*scale), 0., starting_angle] for i in range(len(drivers))])
@@ -64,3 +61,6 @@ if __name__ == '__main__':
         if obs['collisions'].any() == 1.0:
             break
     print('Sim elapsed time:', laptime, 'Real elapsed time:', time.time()-start)
+
+if __name__ == "__main__":
+    race()
