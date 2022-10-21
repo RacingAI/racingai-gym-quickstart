@@ -30,7 +30,7 @@ pip install -r requirements.txt
 Once this is done we run the setup.py file
 
 ```bash
-python gym/setup.py install
+python gym/setup.py install --user
 ```
 
 Then to make sure it's working, go into the src directory and run the simulator
